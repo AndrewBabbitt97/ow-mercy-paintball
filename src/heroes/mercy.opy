@@ -37,6 +37,7 @@ rule "Mercy - Show Resurrection HUD":
     @Hero mercy
     @Condition len(eventPlayer.playersToResurrect) != 0
     @Condition eventPlayer.getUltCharge() == 100
+    @Condition eventPlayer.isAlive() == true
 
     #Padding to center the rez hud in the screen
     for eventPlayer.hudIndex in range(-1, 10, 1):
@@ -60,12 +61,20 @@ rule "Mercy - Hide Resurrection HUD With No Ultimate":
 
     destroyAllHudTexts()
 
+rule "Mercy - Hide Resurrection HUD When Dead":
+    @Event eachPlayer
+    @Hero mercy
+    @Condition eventPlayer.isAlive() == false
+
+    destroyAllHudTexts()
+
 rule "Mercy - Old Resurrection Ultimate":
     @Event eachPlayer
     @Hero mercy
     @Condition eventPlayer.getUltCharge() == 100
     @Condition eventPlayer.isHoldingButton(Button.ULTIMATE) == true
     @Condition len(eventPlayer.playersToResurrect) > 0
+    @Condition eventPlayer.isAlive() == true
     
     #reset ultimate charge
     eventPlayer.setUltCharge(0)
